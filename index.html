@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Javascript Quiz</title>
+    <link rel="resetsheet" href="./assets/reset.css">
+    <link rel="stylesheet" href="./assets/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Javascript Quiz</h1>
+        <button id="startButton">Start</button>
+    </header>
+
+    <main id="questionBlock">
+        <section id="questionText"></section>
+        <section id="questionOptions">
+            <ul>
+                <li id="choiceOne"></li>
+                <li id="choiceTwo"></li>
+                <li id="choiceThree"></li>
+                <li id="choiceFour"></li>
+            </ul>
+        </section>
+        <section id="timer">
+            <div id="timerText">
+            <div id="largeFontTimerCount">10</div>
+            <h3>seconds remaining</h3>
+        </section>
+        <section>
+            <div id="results">
+                <div>
+                    <h2>Wins: <span class="win">0 </span> </h2>
+                    <h2>Losses: <span class="lose">0</span></h2>
+                <div>
+                <button id="resetButton">Reset Score</button>
+            </div>
+        </section>
+    </main>
+    <script src="./assets/script.js"></script>
+</body>
+</html>
