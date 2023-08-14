@@ -157,6 +157,7 @@ function nextQuestion() {
 
 function checkAnswer() {
     console.log("checking answer")
+    
 }
 
 function resetScore() {
