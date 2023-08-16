@@ -38,25 +38,30 @@ resetScore - on button click, winCounter and lossCounter reset to 0
 
 var winCount = document.querySelector(".win")
 var lossCount = document.querySelector(".lose")
+var timerText = document.getElementById("timerText")
 var timerElement = document.getElementById("timerCount")
 var startButton = document.getElementById("startButton")
 var questionText = document.getElementById("questionText")
 var questionOptions = document.getElementById("questionOptions")
-var a = document.getElementById("choiceOne")
-var b = document.getElementById("choiceTwo")
-var c = document.getElementById("choiceThree")
-var d = document.getElementById("choiceFour")
+var a = document.getElementById("a")
+var b = document.getElementById("b")
+var c = document.getElementById("c")
+var d = document.getElementById("d")
 var resetButton = document.getElementById("resetButton")
+var choiceResponse = document.getElementById("choiceResponse")
 // var options = document.querySelector(".options")
 
 var currentQuestion = ""
-var winCounter = 5
+var winCounter = 0
 var lossCounter = 0
 var timer
 var timerCount
 var isWin = false
 var userChoice = ""
 var rightChoice = ""
+var questionsAsked = 0
+var storedLosses = localStorage.getItem('lossCount')
+var storedWins = localStorage.getItem('winCount')
 
 var questions = [
     {
@@ -65,7 +70,8 @@ var questions = [
     b:"js",
     c:"javascript",
     d: "script",
-    correctChoice: "d"
+    correctChoice: "d",
+    asked: false
     },
     {
     question: "How does a WHILE loop start?",
@@ -73,32 +79,36 @@ var questions = [
     b:"while (i <= 10)",
     c:"while i = 1 to 10",
     d: "while i <= 10",
-    correctChoice: "d"
+    correctChoice: "b",
+    asked: false
     },
-    // {
-    // question: "Inside which HTML element do we put the Javascript?",
-    // a:"scripting",
-    // b:"js",
-    // c:"javascript",
-    // d: "script",
-    // correctChoice: "d"
-    // },
-    // {
-    // question: "Inside which HTML element do we put the Javascript?",
-    // a:"scripting",
-    // b:"js",
-    // c:"javascript",
-    // d: "script",
-    // correctChoice: "d"
-    // },
-    // {
-    // question: "Inside which HTML element do we put the Javascript?",
-    // a:"scripting",
-    // b:"js",
-    // c:"javascript",
-    // d: "script",
-    // correctChoice: "d"
-    // },
+    {
+    question: "A is correct",
+    a:"asdfasdfasdf",
+    b:"jasdfasdfasdfs",
+    c:"jaasdfasdfasdfvascript",
+    d: "scasdfasdfasdfript",
+    correctChoice: "a",
+    asked: false
+    },
+    {
+    question: "B is correct",
+    a:"scrasdfasdfasdfipting",
+    b:"jsasdfasdfasdf",
+    c:"javascripasdfasdfasdft",
+    d: "sasdfasdfasdfcript",
+    correctChoice: "b",
+    asked: false
+    },
+    {
+    question: "C is correct",
+    a:"scriptinasdfasdfasdfg",
+    b:"jsasdfasdfasdf",
+    c:"jasdfasdfasdfavascript",
+    d: "scasdfasdfasdfript",
+    correctChoice: "c",
+    asked: false
+    },
 ]
 
 startButton.addEventListener("click", startGame);
@@ -106,30 +116,24 @@ resetButton.addEventListener("click", resetScore);
 questionOptions.addEventListener("click", checkAnswer);
 
 function init() {
+    questionText.innerHTML = "Press Start to Play"
+    console.log("stored wins", storedWins)
+    console.log("stored losses", storedLosses)
     getWins();
     getLosses();
 }
 
-function getWins() {
-    console.log("getting wins")
-    var storedWins = localStorage.getItem('winCount')
-    if (storedWins === null) {
-        winCounter = 0
-    } else {
-        winCounter = storedLosses
-    }
-    winCount.innerHTML = winCounter
-}
-
 function winGame() {
-    questionText.textContent = "Good job! Check your score to see how you did.";
-    choiceOne.innerHTML = ""
-    choiceTwo.innerHTML = ""
-    choiceThree.innerHTML = ""
-    choiceFour.innerHTML = ""
+    questionText.textContent = "Good job!";
+    a.innerHTML = ""
+    b.innerHTML = ""
+    c.innerHTML = ""
+    d.innerHTML = ""
     winCounter++
+    questions.asked = false
     startButton.disabled = false;
     setWins()
+    getWins()
 }
 
 function setWins() {
@@ -137,9 +141,35 @@ function setWins() {
     localStorage.setItem('winCount', winCounter)
 }
 
+function getWins() {
+    console.log("getting wins")
+    if (storedWins === null) {
+        winCounter = 0
+    } else {
+        winCounter = storedWins
+    }
+    winCount.innerHTML = winCounter
+}
+
+function loseGame() {
+    questionText.textContent = "OUT OF TIME. Play again?";
+    a.innerHTML = ""
+    b.innerHTML = ""
+    c.innerHTML = ""
+    d.innerHTML = ""
+    lossCounter++
+    startButton.disabled = false;
+    setLosses()
+    getLosses()
+}
+
+function setLosses() {
+    console.log("setting losses")
+    localStorage.setItem('lossCount', lossCounter)
+}
+
 function getLosses() {
     console.log("getting losses")
-    var storedLosses = localStorage.getItem('lossCount')
     if (storedLosses === null) {
         lossCounter = 0
     } else {
@@ -148,25 +178,10 @@ function getLosses() {
     lossCount.innerHTML = lossCounter
 }
 
-function loseGame() {
-    questionText.textContent = "OUT OF TIME";
-    choiceOne.innerHTML = ""
-    choiceTwo.innerHTML = ""
-    choiceThree.innerHTML = ""
-    choiceFour.innerHTML = ""
-    lossCounter++
-    startButton.disabled = false;
-    setLosses()
-}
-
-function setLosses() {
-    console.log("setting losses")
-    localStorage.setItem('lossCount', lossCounter)
-}
-
 function startGame() {
     console.log("start button pressed")
-    timerCount = 10;
+    isWin = false
+    timerCount = 15
     startButton.disabled = true;
     startTimer();
     nextQuestion();
@@ -187,9 +202,10 @@ function startTimer() {
         }
       }
       // Tests if time has run out
-      if (timerCount === 0) {
+      if (timerCount <= 0) {
         // Clears interval
         clearInterval(timer);
+        timerCount = 0
         loseGame();
       }
     }, 1000);
@@ -198,22 +214,37 @@ function startTimer() {
 function nextQuestion() {
     console.log("next question selected")
     currentQuestion = questions[Math.floor(Math.random() * questions.length)]
-    questionText.innerHTML = currentQuestion.question
-    choiceOne.innerHTML = currentQuestion.a
-    choiceTwo.innerHTML = currentQuestion.b
-    choiceThree.innerHTML = currentQuestion.c
-    choiceFour.innerHTML = currentQuestion.d
+    if (!currentQuestion.asked) {
+        currentQuestion.asked = true
+        questionText.innerHTML = currentQuestion.question
+        a.innerHTML = currentQuestion.a
+        b.innerHTML = currentQuestion.b
+        c.innerHTML = currentQuestion.c
+        d.innerHTML = currentQuestion.d
+    } else {
+        currentQuestion = questions[Math.floor(Math.random() * questions.length)]
+    }
 }
 
 function checkAnswer(event) {
     console.log("checking answer")
-    console.log(questions.correctChoice)
+    console.log("this is the correct answer:", currentQuestion.correctChoice)
     userChoice = event.target
-    rightChoice = questions.correctChoice
-    if (userChoice == rightChoice) {
+    console.log("this is the user choice:", userChoice.id)
+    if (userChoice.id == currentQuestion.correctChoice) {
         console.log("correct choice!")
+        timerCount += 5
+        choiceResponse.innerHTML = "Correct"
+        questionsAsked ++
+            if (questionsAsked < questions.length) {
+                nextQuestion()
+            } else {
+                isWin = true
+            }
     } else {
         console.log("wrong choice")
+        timerCount -= 5
+        choiceResponse.innerHTML = "Incorrect, try again."
     }
 }
 
@@ -221,9 +252,10 @@ function resetScore() {
     console.log("resetting score")
     winCounter = 0
     lossCounter = 0
+    getLosses()
+    getWins()
 }
 
 init();
-
-winGame()
-loseGame()
+// winGame();
+// loseGame();
