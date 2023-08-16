@@ -50,7 +50,7 @@ var resetButton = document.getElementById("resetButton")
 // var options = document.querySelector(".options")
 
 var currentQuestion = ""
-var winCounter = 0
+var winCounter = 5
 var lossCounter = 0
 var timer
 var timerCount
@@ -112,6 +112,13 @@ function init() {
 
 function getWins() {
     console.log("getting wins")
+    var storedWins = localStorage.getItem('winCount')
+    if (storedWins === null) {
+        winCounter = 0
+    } else {
+        winCounter = storedLosses
+    }
+    winCount.innerHTML = winCounter
 }
 
 function winGame() {
@@ -127,10 +134,18 @@ function winGame() {
 
 function setWins() {
     console.log("setting wins")
+    localStorage.setItem('winCount', winCounter)
 }
 
 function getLosses() {
     console.log("getting losses")
+    var storedLosses = localStorage.getItem('lossCount')
+    if (storedLosses === null) {
+        lossCounter = 0
+    } else {
+        lossCounter = storedLosses
+    }
+    lossCount.innerHTML = lossCounter
 }
 
 function loseGame() {
@@ -146,6 +161,7 @@ function loseGame() {
 
 function setLosses() {
     console.log("setting losses")
+    localStorage.setItem('lossCount', lossCounter)
 }
 
 function startGame() {
@@ -199,12 +215,15 @@ function checkAnswer(event) {
     } else {
         console.log("wrong choice")
     }
-    
 }
 
 function resetScore() {
     console.log("resetting score")
+    winCounter = 0
+    lossCounter = 0
 }
 
 init();
 
+winGame()
+loseGame()
