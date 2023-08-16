@@ -1,13 +1,51 @@
+/*
+flow of game
+1) On load, page shows start button and scores
+2) user presses start button
+    - first question displays
+    - first question options display
+    - timer starts
+3) user clicks on question option
+    - time is added to timer
+    - next question displays
+- repeat 3 for as many questions as there are until LAST QUESTION
+4) if timer runs out
+    - game ends
+    - "Out of Time" displays
+    - score recorded
+    - play again? option displays
+5) ON LAST QUESTION: when user clicks on option
+    - game over displayed
+    - score recorded  
+    - play again? option displays
+
+-----
+
+FUNCTIONS
+init - run on load of page, calls getWins, getLosses
+getWins - pulls saved win count from memory and displays on page
+winGame - displays "good job" text, ++ win counter, enables start button, calls setWins 
+setWins - saves win count in memory
+getLosses - pulls saved loss count from memory and displays on page
+loseGame - displays "out of time", ++ loss counter, enables start button, calls setLosses
+setLosses - saves loss count in memory
+startGame - runs when button pressed, sets beginning timer amount, disables start button, calls startTimer, calls nextQuestion
+startTimer - starts countdown timer, checks for value of isWin, either ends when time runs out and calls loseGame or when isWin = true and calls winGame
+nextQuestion - picks question from questions array, displays text on screen
+checkAnswer - on user click, checks selected answer against correct answer. if true, time added to timer and nextQuestion called. if false, time subtracted from timer and nextQuestion called
+resetScore - on button click, winCounter and lossCounter reset to 0
+*/
+
 var winCount = document.querySelector(".win")
 var lossCount = document.querySelector(".lose")
 var timerElement = document.getElementById("timerCount")
 var startButton = document.getElementById("startButton")
 var questionText = document.getElementById("questionText")
 var questionOptions = document.getElementById("questionOptions")
-var choiceOne = document.getElementById("choiceOne")
-var choiceTwo = document.getElementById("choiceTwo")
-var choiceThree = document.getElementById("choiceThree")
-var choiceFour = document.getElementById("choiceFour")
+var a = document.getElementById("choiceOne")
+var b = document.getElementById("choiceTwo")
+var c = document.getElementById("choiceThree")
+var d = document.getElementById("choiceFour")
 var resetButton = document.getElementById("resetButton")
 // var options = document.querySelector(".options")
 
@@ -17,6 +55,8 @@ var lossCounter = 0
 var timer
 var timerCount
 var isWin = false
+var userChoice = ""
+var rightChoice = ""
 
 var questions = [
     {
@@ -33,7 +73,7 @@ var questions = [
     b:"while (i <= 10)",
     c:"while i = 1 to 10",
     d: "while i <= 10",
-    correctChoice: "b"
+    correctChoice: "d"
     },
     // {
     // question: "Inside which HTML element do we put the Javascript?",
@@ -76,6 +116,10 @@ function getWins() {
 
 function winGame() {
     questionText.textContent = "Good job! Check your score to see how you did.";
+    choiceOne.innerHTML = ""
+    choiceTwo.innerHTML = ""
+    choiceThree.innerHTML = ""
+    choiceFour.innerHTML = ""
     winCounter++
     startButton.disabled = false;
     setWins()
@@ -91,6 +135,10 @@ function getLosses() {
 
 function loseGame() {
     questionText.textContent = "OUT OF TIME";
+    choiceOne.innerHTML = ""
+    choiceTwo.innerHTML = ""
+    choiceThree.innerHTML = ""
+    choiceFour.innerHTML = ""
     lossCounter++
     startButton.disabled = false;
     setLosses()
@@ -139,24 +187,18 @@ function nextQuestion() {
     choiceTwo.innerHTML = currentQuestion.b
     choiceThree.innerHTML = currentQuestion.c
     choiceFour.innerHTML = currentQuestion.d
-
-    // for (var i = 0; i < currentQuestion.length; i++) {
-    //     options.innerHTML = currentQuestion.answers
-    //     console.log(i)
-    // }
-        
-    // choiceOne.innerHTML = currentQuestion.answers.a
-    // choiceTwo.innerHTML = currentQuestion.answers.b
-    // choiceThree.innerHTML = currentQuestion.answers.c
-    // choiceFour.innerHTML = currentQuestion.answers.d
-    // console.log(currentQuestion.answers.a)
-    // console.log(currentQuestion.answers.b)
-    // console.log(currentQuestion.answers.c)
-    // console.log(currentQuestion.answers.d)
 }
 
-function checkAnswer() {
+function checkAnswer(event) {
     console.log("checking answer")
+    console.log(questions.correctChoice)
+    userChoice = event.target
+    rightChoice = questions.correctChoice
+    if (userChoice == rightChoice) {
+        console.log("correct choice!")
+    } else {
+        console.log("wrong choice")
+    }
     
 }
 

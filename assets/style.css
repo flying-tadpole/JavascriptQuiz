@@ -1,0 +1,38 @@
+/* setting base style for whole page */
+* {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  font-size: 100%;
+}
+
+header {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#questionBlock {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid black;
+}
+
+#questionText {
+    font-weight: bold;
+    font-size: larger;
+}
+
+ul {
+    list-style:lower-alpha;
+}
+
+#timer {
+    border: 4px solid black;
+    text-align: center;
+}
+
+#result {
+    flex-direction: row;
+}
