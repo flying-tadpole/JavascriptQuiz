@@ -61,7 +61,12 @@ var timerCount
 var isWin = false
 var userChoice = ""
 var rightChoice = ""
-var questionsAsked = ""
+var questionsAsked = 0
+
+// array of saved high scores
+var savedHighscores = [
+
+]
 
 //array of possible questions
 var questions = [
@@ -196,11 +201,13 @@ function getLosses() {
 function startGame() {
     console.log("start button pressed")
     isWin = false
-    timerCount = 15
+    timerCount = 30
     startButton.disabled = true;
     choicesList.hidden = false
     choiceResponse.hidden = false
     timerText.hidden = false
+    questions.asked = false
+    questionsAsked = 0
     startTimer();
     nextQuestion();
 }
@@ -254,7 +261,7 @@ function nextQuestion() {
     }
 }
 
-// checks user answer against correct answer. adds/subtracts from timer depending on answer
+// checks user answer against correct answer. subtracts from timer depending on answer
 function checkAnswer(event) {
     console.log("checking answer")
     console.log("this is the correct answer:", currentQuestion.correctChoice)
@@ -262,7 +269,6 @@ function checkAnswer(event) {
     console.log("this is the user choice:", userChoice.id)
     if (userChoice.id == currentQuestion.correctChoice) {
         console.log("correct choice!")
-        timerCount += 5
         choiceResponse.innerHTML = "Correct"
         questionsAsked ++
             if (questionsAsked < questions.length) {
@@ -276,6 +282,17 @@ function checkAnswer(event) {
         choiceResponse.innerHTML = "Incorrect, try again."
     }
 }
+
+// function highScore() {
+//     var initials = prompt("Enter your initials")
+//     if (!initials) {
+//         return
+//     }
+//     var highscoreEl = {
+//         name: initials,
+//         timeLeft: timerCount
+//     }
+// }
 
 // resets saved score
 function resetScore() {
