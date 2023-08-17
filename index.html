@@ -5,40 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Javascript Quiz</title>
     <link rel="resetsheet" href="./assets/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/style.css">
 </head>
 
 <body>
-    <header>
+    <header class="row my-4 text-center">
         <h1>Javascript Quiz</h1>
-        <button id="startButton">Start</button>
+        <button class="btn btn-outline-primary col-4 mx-auto" id="startButton">Start</button>
     </header>
 
-    <main id="questionBlock">
-        <section id="questionText"></section>
-        <section id="questionOptions">
-            <ul class="choicesList">
-                <li class="options" id="a"></li>
-                <li class="options" id="b"></li>
-                <li class="options" id="c"></li>
-                <li class="options" id="d"></li>
+    <main class="d-block justify-content-center mx-auto" style="width: 75%;" id="questionBlock">
+        <section class="card-header text-center fw-bold" id="questionText"></section>
+        <section class="card text-center mx-auto" id="questionOptions">
+            <ul class="list-group list-group-flush choicesList">
+                <li class="list-group-item list-group-item-action list-group-item-light options" id="a"></li>
+                <li class="list-group-item list-group-item-action list-group-item-light options" id="b"></li>
+                <li class="list-group-item list-group-item-action list-group-item-light options" id="c"></li>
+                <li class="list-group-item list-group-item-action list-group-item-light options" id="d"></li>
             </ul>
-            <div id="choiceResponse"></div>
+            <div class="fw-bolder text-center" id="choiceResponse"></div>
         </section>
-        <section id="timer">
-            <div id="timerText">
-            <div id="timerCount"></div>
-            <h3>Seconds Remaining</h3>
+        <section class="text-center" id="timer">
+            <div class="fw-light fst-italic" id="timerText">
+            <div class="fw-medium fs-2" id="timerCount"></div>
+            <p>Seconds Remaining</p>
         </section>
     </main>
     <footer>
-        <section>
-            <div id="results">
+        <section class="card mx-auto" style="width: 25%">
+            <div class="card-body text-center" id="results">
                 <div>
-                    <h2>Wins: <span class="win">0 </span> </h2>
-                    <h2>Losses: <span class="lose">0</span></h2>
+                    <p class="card-title">Wins: <span class="win">0 </span> </p>
+                    <p class="card-title">Losses: <span class="lose">0</span></p>
                 <div>
-                <button id="resetButton">Reset Score</button>
+                <button class="btn btn-outline-warning" id="resetButton">Reset Score</button>
             </div>
         </section>
     </footer>

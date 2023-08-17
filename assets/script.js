@@ -36,6 +36,7 @@ checkAnswer - on user click, checks selected answer against correct answer. if t
 resetScore - on button click, winCounter and lossCounter reset to 0
 */
 
+// selecting elements
 var winCount = document.querySelector(".win")
 var lossCount = document.querySelector(".lose")
 var timerText = document.getElementById("timerText")
@@ -47,10 +48,11 @@ var a = document.getElementById("a")
 var b = document.getElementById("b")
 var c = document.getElementById("c")
 var d = document.getElementById("d")
+var choicesList = document.querySelector(".choicesList")
 var resetButton = document.getElementById("resetButton")
 var choiceResponse = document.getElementById("choiceResponse")
-// var options = document.querySelector(".options")
 
+// creating global scope variables
 var currentQuestion = ""
 var winCounter = 0
 var lossCounter = 0
@@ -59,10 +61,9 @@ var timerCount
 var isWin = false
 var userChoice = ""
 var rightChoice = ""
-var questionsAsked = 0
-var storedLosses = localStorage.getItem('lossCount')
-var storedWins = localStorage.getItem('winCount')
+var questionsAsked = ""
 
+//array of possible questions
 var questions = [
     {
     question: "Inside which HTML element do we put the Javascript?",
@@ -83,110 +84,128 @@ var questions = [
     asked: false
     },
     {
-    question: "A is correct",
-    a:"asdfasdfasdf",
-    b:"jasdfasdfasdfs",
-    c:"jaasdfasdfasdfvascript",
-    d: "scasdfasdfasdfript",
-    correctChoice: "a",
-    asked: false
-    },
-    {
-    question: "B is correct",
-    a:"scrasdfasdfasdfipting",
-    b:"jsasdfasdfasdf",
-    c:"javascripasdfasdfasdft",
-    d: "sasdfasdfasdfcript",
+    question: "Which type of language is JavaScript?",
+    a:"Object-Oriented",
+    b:"Object-Based",
+    c:"Assembly-Language",
+    d: "High-Level",
     correctChoice: "b",
     asked: false
     },
     {
-    question: "C is correct",
-    a:"scriptinasdfasdfasdfg",
-    b:"jsasdfasdfasdf",
-    c:"jasdfasdfasdfavascript",
-    d: "scasdfasdfasdfript",
+    question: "'function' and 'var' are known as:",
+    a:"Keywords",
+    b:"Data types",
+    c:"Declaration statements",
+    d: "Prototypes",
     correctChoice: "c",
+    asked: false
+    },
+    {
+    question: "Which of the following variables takes precedence over the others if the names are the same?",
+    a:"Global variable",
+    b:"Local variable",
+    c:"Neither",
+    d: "The one that is typed first in the function",
+    correctChoice: "b",
     asked: false
     },
 ]
 
+//adding event listeners
 startButton.addEventListener("click", startGame);
 resetButton.addEventListener("click", resetScore);
 questionOptions.addEventListener("click", checkAnswer);
 
+//called on page load
 function init() {
     questionText.innerHTML = "Press Start to Play"
-    console.log("stored wins", storedWins)
-    console.log("stored losses", storedLosses)
+    choicesList.hidden = true
+    choiceResponse.hidden = true
+    timerText.hidden = true
     getWins();
     getLosses();
 }
 
+// called when game is won, updates score
 function winGame() {
-    questionText.textContent = "Good job!";
-    a.innerHTML = ""
-    b.innerHTML = ""
-    c.innerHTML = ""
-    d.innerHTML = ""
+    questionText.textContent = "Good job! Play again?";
+    choicesList.hidden = true
+    choiceResponse.hidden = true
     winCounter++
+    console.log("this is winCounter from winGame", winCounter)
     questions.asked = false
     startButton.disabled = false;
     setWins()
     getWins()
 }
 
+// saves wins to local storage
 function setWins() {
     console.log("setting wins")
     localStorage.setItem('winCount', winCounter)
+    console.log("this is wincounter from setWins", winCounter)
 }
 
+// gets wins from local storage and displays on page
 function getWins() {
     console.log("getting wins")
+    var storedWins = localStorage.getItem('winCount')
     if (storedWins === null) {
         winCounter = 0
     } else {
         winCounter = storedWins
     }
     winCount.innerHTML = winCounter
+    console.log("this is wincounter from getWins", winCounter)
 }
 
+// called when game is lost. updates loss count
 function loseGame() {
     questionText.textContent = "OUT OF TIME. Play again?";
-    a.innerHTML = ""
-    b.innerHTML = ""
-    c.innerHTML = ""
-    d.innerHTML = ""
+    choicesList.hidden = true
+    choiceResponse.hidden = true
     lossCounter++
+    questions.asked = false
     startButton.disabled = false;
     setLosses()
     getLosses()
 }
 
+// saves losses to local storage
 function setLosses() {
     console.log("setting losses")
     localStorage.setItem('lossCount', lossCounter)
+    console.log("this is losscounter from setlosses", lossCounter)
 }
 
+// gets losses from storage and displays on page
 function getLosses() {
     console.log("getting losses")
+    var storedLosses = localStorage.getItem('lossCount')
     if (storedLosses === null) {
         lossCounter = 0
     } else {
         lossCounter = storedLosses
     }
     lossCount.innerHTML = lossCounter
+    console.log("this is losscounter from getlosses", lossCounter)
 }
 
+// starts game when button is pressed
 function startGame() {
     console.log("start button pressed")
     isWin = false
     timerCount = 15
     startButton.disabled = true;
+    choicesList.hidden = false
+    choiceResponse.hidden = false
+    timerText.hidden = false
     startTimer();
     nextQuestion();
 }
 
+// starts timer and tests for end of game
 function startTimer() {
     // Sets timer
     console.log("timer started")
@@ -211,9 +230,11 @@ function startTimer() {
     }, 1000);
 }
 
+// pulls question from array, checks to see if question has been asked yet in this round
 function nextQuestion() {
     console.log("next question selected")
     currentQuestion = questions[Math.floor(Math.random() * questions.length)]
+    console.log("this is the currentQuestion", currentQuestion)
     if (!currentQuestion.asked) {
         currentQuestion.asked = true
         questionText.innerHTML = currentQuestion.question
@@ -223,9 +244,17 @@ function nextQuestion() {
         d.innerHTML = currentQuestion.d
     } else {
         currentQuestion = questions[Math.floor(Math.random() * questions.length)]
+        console.log("the question had to be rerolled")
+        console.log("this is the currentQuestion", currentQuestion)
+        questionText.innerHTML = currentQuestion.question
+        a.innerHTML = currentQuestion.a
+        b.innerHTML = currentQuestion.b
+        c.innerHTML = currentQuestion.c
+        d.innerHTML = currentQuestion.d
     }
 }
 
+// checks user answer against correct answer. adds/subtracts from timer depending on answer
 function checkAnswer(event) {
     console.log("checking answer")
     console.log("this is the correct answer:", currentQuestion.correctChoice)
@@ -248,14 +277,16 @@ function checkAnswer(event) {
     }
 }
 
+// resets saved score
 function resetScore() {
     console.log("resetting score")
     winCounter = 0
     lossCounter = 0
-    getLosses()
+    setWins()
+    setLosses()
     getWins()
+    getLosses()
 }
 
+// call init on page load
 init();
-// winGame();
-// loseGame();
